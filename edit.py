@@ -1,8 +1,8 @@
 import streamlit as st
 import random
 import pandas as pd
-st.set_page_config(page_title="EV Charging Simulator", layout="wide")
-import streamlit as st
+import matplotlib.pyplot as plt
+
 
 # 1. Page Configuration
 st.set_page_config(page_title="EV Charging Simulator", layout="wide")
@@ -105,7 +105,9 @@ CAR_INFO = {
 }
 
 BATTERY = {"<10%": 5, "10–25%": 17, "25–50%": 37, "50–75%": 62, ">75%": 80}
+
 WAITING = {"Now": 0, "5 min": 5, "10 min": 10, "20 min": 20, "30+ min": 60}
+
 def make_ports():
     ports = []
     for i in range(1, 7):
@@ -119,11 +121,15 @@ def make_ports():
     return ports
 
 st.subheader("🚗 Tell us about your car")
-col2, col3 = st.columns(2)
-battery = col2.selectbox("Battery level",["Below 10%", "10-25%", "25-50%", "50-75%", "Above 75%"])
-wait    = col3.selectbox("Max wait time",["0 mins", "5 mins", "10 mins", "20 mins", "30+ mins"])
+battery = battery = st.slider(
+    "Battery Level (%)",
+    min_value=0,
+    max_value=100,
+    value=50
+)
 
-my_bat = {"Below 10%":5, "10-25%":17, "25-50%":37, "50-75%":62, "Above 75%":80}[battery]
+my_bat = battery
+wait    =st.selectbox("how much time you are here ?",["0 mins", "5 mins", "10 mins", "20 mins", "30+ mins"])
 w = {"0 mins":0, "5 mins":5, "10 mins":10, "20 mins":20, "30+ mins":60}[wait]
 
 if st.button("🔄 Refresh Station"): st.session_state.clear()
@@ -133,8 +139,42 @@ if "ports" not in st.session_state:
     queue = [{"name":f"EV #{i+1}", "bat":random.randint(5,80)} for i in range(random.randint(0,4))]
     st.session_state.queue = sorted(queue, key=lambda x: x["bat"])
 
+# ── NEW: 3 Charging Ports ──────────────────────────────────────────────────────
+if "charging_ports" not in st.session_state:
+    st.session_state.charging_ports = {
+        "Port 1": random.randint(1, 8),
+        "Port 2": random.randint(1, 8),
+        "Port 3": random.randint(1, 8),
+    }
+
 ports = st.session_state.ports
 queue = st.session_state.queue
+charging_ports = st.session_state.charging_ports
+
+# ──  Bar Graph – Population at Each Port ───────────────────────────────────
+st.markdown("---")
+st.subheader("📊 Port Population (Live Load)")
+
+port_names = list(charging_ports.keys())
+port_loads = list(charging_ports.values())
+colors = ["#05fce7" if v == min(port_loads) else "#471675" for v in port_loads]
+
+fig, ax = plt.subplots(figsize=(6, 3))
+fig.patch.set_facecolor("#020202")
+ax.set_facecolor("#030101")
+bars = ax.bar(port_names, port_loads, color=colors, width=0.4, edgecolor="#000000", linewidth=0.8)
+ax.set_ylabel("No. of EVs", color="#f00707")
+ax.set_title("EVs at Each Charging Port", color="#068be4", fontsize=13)
+ax.tick_params(colors="#068be4")
+for spine in ax.spines.values():
+    spine.set_edgecolor("#0a0b0c")
+for bar, val in zip(bars, port_loads):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1, str(val),
+            ha='center', color='white', fontsize=11)
+st.pyplot(fig)
+
+best_port = min(charging_ports, key=charging_ports.get)
+st.success(f"✅ Recommended Port for you → **{best_port}** (Only {charging_ports[best_port]} EVs present — least crowded!)")
 
 st.markdown("---")
 st.title("EV Charging Queue")
@@ -151,18 +191,25 @@ position = ["🥇 First", "🥈 Second", "🥉 Third", "#4 Fourth", "#5 Fifth"]
 
 for i, ev in enumerate(st.session_state.queue):
     icon = "🚨" if ev["bat"] <= 15 else ("⚠️" if ev["bat"] <= 30 else "🟢")
-    st.write(f"{position[i]}  —  🚗 {ev['name']} |  🔋 {ev['bat']}%  {icon}")
+
+    assigned = list(charging_ports.keys())[i % 3]
+    st.write(f"{position[i]}  —  🚗 {ev['name']} |  🔋 {ev['bat']}%  {icon}  |  🔌 Go to → **{assigned}**")
     st.progress(ev["bat"])
 st.markdown("---")
 if battery is None:
-    st.warning("Select your battery level to see your position.")
-else:
-    battery_map = {"Below 10%":5, "10-25%":17, "25-50%":37, "50-75%":62, "Above 75%":80}
-    my_bat = battery_map[battery]
-    my_pos = sum(1 for ev in st.session_state.queue if ev["bat"] < my_bat) + 1
-    pos_name = position[my_pos - 1] if my_pos <= len(position) else f"#{my_pos}"
-    st.info(f"📍 Currently you are at **{pos_name}** position in the queue!")
+    st.markdown("---")
 
+my_bat = battery
 
-        
+count = sum(
+    1 for ev in st.session_state.queue
+    if ev["bat"] <= my_bat
+)
 
+my_pos = count + 1
+
+pos_name = position[my_pos - 1] if my_pos <= len(position) else f"#{my_pos}"
+
+st.info(f"📍 Currently you are at **{pos_name}** position in the queue!")
+
+st.success(f"🔌 Head to **{best_port}** — it's the least crowded port for you right now!")
