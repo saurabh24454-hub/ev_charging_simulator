@@ -5,12 +5,11 @@ import matplotlib.pyplot as plt
 
 st.markdown("""
 <style>
-.stApp { background: linear-gradient(135deg,#001a1a 0%,#002a20 35%,#001030 70%,#0a0020 100%); color: #00ffd5; }
-header[data-testid="stHeader"] { background: linear-gradient(90deg, #001a1a 0%, #00ffd5 40%, #aa44ff 60%, #0a0020 100%); height: 4px; }
-section[data-testid="stSidebar"] { background: linear-gradient(180deg,#001a1a 0%,#0a0020 100%) !important; border-right: 1px solid rgba(0,255,213,0.2); }
-label, .stMarkdown p { color: #00ffd5 !important; font-weight: 500; }
+.stApp { background-color: #f1f8f4; color: #1b5e20; }
+header[data-testid="stHeader"] { background: linear-gradient(90deg, #f1f8f4 0%, #2e7d32 50%, #f1f8f4 100%); height: 4px; }
+section[data-testid="stSidebar"] { background-color: #e8f5e9 !important; border-right: 1px solid rgba(46,125,50,0.2); }
+label, .stMarkdown p { color: #2e7d32 !important; font-weight: 500; }
 </style>""", unsafe_allow_html=True)
-
 st.markdown("<h1 style='text-align: center; color: #00e676;'>⚡ EV Charging Simulator</h1>", unsafe_allow_html=True)
 st.text("Simulates EV charging ports: availability, wait time, queue position, and cost based on your battery level.")
 
