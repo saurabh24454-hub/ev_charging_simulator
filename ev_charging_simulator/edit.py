@@ -5,22 +5,17 @@ import matplotlib.pyplot as plt
 
 st.markdown("""
 <style>
-<style>
-/* ---- Light mode ---- */
-.stApp { background-color: #f0f7f1; color: #1b4d2e; }
-header[data-testid="stHeader"] { background: linear-gradient(90deg, #f0f7f1 0%, #2e7d32 50%, #f0f7f1 100%); height: 4px; }
-section[data-testid="stSidebar"] { background-color: #dceede !important; border-right: 1px solid rgba(46,125,50,0.25); }
-label, .stMarkdown p { color: #1b4d2e !important; font-weight: 500; }
- 
-/* ---- Dark mode ---- */
-@media (prefers-color-scheme: dark) {
-    .stApp { background-color: #0d1f10 !important; color: #a5d6a7 !important; }
-    header[data-testid="stHeader"] { background: linear-gradient(90deg, #0d1f10 0%, #69f0ae 50%, #0d1f10 100%) !important; height: 4px; }
-    section[data-testid="stSidebar"] { background-color: #112215 !important; border-right: 1px solid rgba(105,240,174,0.2) !important; }
-    label, .stMarkdown p { color: #a5d6a7 !important; }
-}
+.stApp { background-color: #0a0a0a; color: #00e676; }
+header[data-testid="stHeader"] { background: linear-gradient(90deg, #0a0a0a 0%, #00e676 50%, #0a0a0a 100%); height: 4px; }
+section[data-testid="stSidebar"] { background-color: #111111 !important; border-right: 1px solid rgba(0,230,118,0.2); }
+label, .stMarkdown p { color: #00e676 !important; font-weight: 500; }
+.stButton > button { background-color: #0f2a18; color: #00e676; border: 1px solid #00e676; border-radius: 8px; }
+.stButton > button:hover { background-color: #00e676; color: #050505; }
+.stSlider > div { color: #00e676; }
+.stSuccess { background-color: #0f2a18 !important; color: #00e676 !important; }
+.stInfo { background-color: #1a1500 !important; color: #ffd600 !important; }
+.stWarning { background-color: #1a1000 !important; color: #ffab40 !important; }
 </style>""", unsafe_allow_html=True)
- 
 st.sidebar.image("https://tse1.mm.bing.net/th/id/OIP.YMBY9WiqLOLuRavdlOn0XAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", width=150)
 st.sidebar.title("My Profile")
 
