@@ -5,14 +5,22 @@ import matplotlib.pyplot as plt
 
 st.markdown("""
 <style>
-.stApp { background-color: #f1f8f4; color: #1b5e20; }
-header[data-testid="stHeader"] { background: linear-gradient(90deg, #f1f8f4 0%, #2e7d32 50%, #f1f8f4 100%); height: 4px; }
-section[data-testid="stSidebar"] { background-color: #e8f5e9 !important; border-right: 1px solid rgba(46,125,50,0.2); }
-label, .stMarkdown p { color: #2e7d32 !important; font-weight: 500; }
+<style>
+/* ---- Light mode ---- */
+.stApp { background-color: #f0f7f1; color: #1b4d2e; }
+header[data-testid="stHeader"] { background: linear-gradient(90deg, #f0f7f1 0%, #2e7d32 50%, #f0f7f1 100%); height: 4px; }
+section[data-testid="stSidebar"] { background-color: #dceede !important; border-right: 1px solid rgba(46,125,50,0.25); }
+label, .stMarkdown p { color: #1b4d2e !important; font-weight: 500; }
+ 
+/* ---- Dark mode ---- */
+@media (prefers-color-scheme: dark) {
+    .stApp { background-color: #0d1f10 !important; color: #a5d6a7 !important; }
+    header[data-testid="stHeader"] { background: linear-gradient(90deg, #0d1f10 0%, #69f0ae 50%, #0d1f10 100%) !important; height: 4px; }
+    section[data-testid="stSidebar"] { background-color: #112215 !important; border-right: 1px solid rgba(105,240,174,0.2) !important; }
+    label, .stMarkdown p { color: #a5d6a7 !important; }
+}
 </style>""", unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center; color: #00e676;'>⚡ EV Charging Simulator</h1>", unsafe_allow_html=True)
-st.text("Simulates EV charging ports: availability, wait time, queue position, and cost based on your battery level.")
-
+ 
 st.sidebar.image("https://tse1.mm.bing.net/th/id/OIP.YMBY9WiqLOLuRavdlOn0XAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", width=150)
 st.sidebar.title("My Profile")
 
