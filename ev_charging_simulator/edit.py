@@ -20,12 +20,14 @@ label, .stMarkdown p { color: #00e676 !important; font-weight: 500; }
 st.markdown("""
 <div style='text-align:center; padding: 20px 0 10px 0;'>
     <h1 style='
-        font-size: 2.8em;
+        font-size: clamp(1.4em, 4vw, 2.8em);
         font-weight: 900;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.10em;
         color: #00e676;
         text-shadow: 0 0 20px #00e67688, 0 0 40px #00e67644;
         margin: 0;
+        white-space: nowrap;
+        text-align: center;
     '>⚡ EV CHARGING SIMULATOR</h1>
     <p style='color:#00b894; font-size:1em; margin-top:6px; letter-spacing:0.08em;'>
         SMART · FAST · EFFICIENT
@@ -34,7 +36,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; color: #00e676;'>⚡ EV Charging Simulator</h1>", unsafe_allow_html=True)
+
 st.text("Simulates EV charging ports: availability, wait time, queue position, and cost based on your battery level.")
 
 st.sidebar.image("https://tse1.mm.bing.net/th/id/OIP.YMBY9WiqLOLuRavdlOn0XAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", width=150)
