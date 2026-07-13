@@ -16,12 +16,33 @@ label, .stMarkdown p { color: #00e676 !important; font-weight: 500; }
 .stInfo { background-color: #1a1500 !important; color: #ffd600 !important; }
 .stWarning { background-color: #1a1000 !important; color: #ffab40 !important; }
 </style>""", unsafe_allow_html=True)
+
+st.markdown("""
+<div style='text-align:center; padding: 20px 0 10px 0;'>
+    <h1 style='
+        font-size: 2.8em;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        color: #00e676;
+        text-shadow: 0 0 20px #00e67688, 0 0 40px #00e67644;
+        margin: 0;
+    '>⚡ EV CHARGING SIMULATOR</h1>
+    <p style='color:#00b894; font-size:1em; margin-top:6px; letter-spacing:0.08em;'>
+        SMART · FAST · EFFICIENT
+    </p>
+    <div style='width:120px; height:2px; background:linear-gradient(90deg,transparent,#00e676,transparent); margin:10px auto 0;'></div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("<h1 style='text-align: center; color: #00e676;'>⚡ EV Charging Simulator</h1>", unsafe_allow_html=True)
+st.text("Simulates EV charging ports: availability, wait time, queue position, and cost based on your battery level.")
+
 st.sidebar.image("https://tse1.mm.bing.net/th/id/OIP.YMBY9WiqLOLuRavdlOn0XAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", width=150)
 st.sidebar.title("My Profile")
 
 name = st.sidebar.text_input("Enter your name")
 if name:
-    st.info(f"Hello {name}! welcome to EV charging simulator")
+    st.info(f"Hello {name}! welcome back!!")
 
 phone = st.sidebar.text_input("Enter your phone number 📱")
 if phone:
@@ -37,30 +58,33 @@ if email:
     else:
         st.sidebar.error("Please enter a valid email address.")
 
-car = st.sidebar.radio("🚗 Tell us about your car", ["Hatchback", "Sedan", "SUV", "Bus","scooter"], index=None)
+car = st.sidebar.radio("🚗 Tell us about your car", ["Hatchback", "Sedan", "SUV", "Bus"], index=None)
 
 CAR_INFO = {
-    "Hatchback": {"battery_kwh": 30, "charger_kw": 5.0},
+    "Hatchback": {"battery_kwh": 30, "charger_kw": 3.3},
     "Sedan":     {"battery_kwh": 60, "charger_kw": 7.0},
     "SUV":       {"battery_kwh": 80, "charger_kw": 7.0},
     "Bus":       {"battery_kwh": 200, "charger_kw": 50.0},
-    "scooter":   {"battery_kwh": 5,  "charger_kw": 3.3}
 }
 if car:
     st.write(pd.DataFrame({"Vehicle type": list(CAR_INFO), "Battery (kWh)": [v["battery_kwh"] for v in CAR_INFO.values()], "Max charger (kW)": [v["charger_kw"] for v in CAR_INFO.values()]}))
 
 st.sidebar.selectbox("Select your state", ["Andhra Pradesh", "Himachal Pradesh", "Delhi", "Maharashtra", "Karnataka", "Tamil Nadu", "Other"], index=None)
 
+# ---- NEW: Charging mode selector ----
 st.sidebar.markdown("---")
 charge_mode = st.sidebar.radio("⚡ Charging Mode", ["🐢 Normal", "🚀 Fast"], horizontal=True)
 if charge_mode == "🚀 Fast":
     st.sidebar.info("Fast charge uses 50 kW DC — 25% price surcharge. Cars with max < 50 kW won't benefit.")
 else:
-    st.sidebar.info("Normal charge uses your car's onboard AC charger. Slower but cheaper & gentler on battery.")#
+    st.sidebar.info("Normal charge uses your car's onboard AC charger. Slower but cheaper & gentler on battery.")
+# ---- END NEW ----
 
 st.subheader("🚗 Battery Level")
 battery = st.slider("Battery Level (%)", 0, 100)
 my_bat = battery
+
+# --- simulation state (kept separate from profile so refresh doesn't wipe it) ---
 if "charging_ports" not in st.session_state:
     st.session_state.charging_ports = {
         f"Port {i}": {"load": random.randint(1, 8), "kw": random.choice([7.0, 50.0])} for i in range(1, 5)
@@ -100,7 +124,7 @@ def recommend_port(ports, required_kw):
 required_kw = CAR_INFO[car]["charger_kw"] if car else None
 # ---- NEW: bump required_kw for fast mode ----
 if charge_mode == "🚀 Fast" and car:
-    required_kw = max(required_kw, 40.0)
+    required_kw = max(required_kw, 50.0)
 # ---- END NEW ----
 best_port = recommend_port(charging_ports, required_kw)
 
@@ -159,9 +183,9 @@ else:
        ⚡ EV CHARGING RECEIPT
 ====================================
 Name        : {name if name else 'N/A'}
-Phone No.     : {phone if phone else 'N/A'}
+Phone       : {phone if phone else 'N/A'}
 Booking ID  : #{bid}
-Vehicle Type    : {b['car']}
+Car Type    : {b['car']}
 Port        : {b['port']}
 Battery     : {b['battery']}%
 Mode        : {charge_mode}
